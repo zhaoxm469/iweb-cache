@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>npm-ts-template-starter</title>
+
+	<link href=https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css rel=stylesheet>
+	<style>
+		#app {
+			padding: 20px;
+		}
+
+		.input-group {
+			padding: 10px 0;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="app">
+		<h3>本地存储方法二次封装</h3>
+
+		npm run dev ,开发时测试
+
+		<div class="input-group">
+			<input type="text" class="form-control" v-model="key1" placeholder="请输入要存储的数据key">
+			<input type="text" class="form-control" v-model="value1" placeholder="请输入要存储的数据value">
+			<span class="input-group-btn">
+				<button type="button" class="btn btn-default" @click="handleSaveBtnTap">保存</button>
+			</span>
+		</div>
+
+		<div class="input-group">
+			<input type="text" class="form-control" v-model="key2" placeholder="请输入要删除数据的key">
+			<span class="input-group-btn">
+				<button type="button" class="btn btn-default" @click="handleClearBtnTap">删除</button>
+			</span>
+		</div>
+
+		<div class="input-group">
+			<input type="text" class="form-control" v-model="key3" placeholder="请输入要读取数据的key">
+			<span class="input-group-btn">
+				<button type="button" class="btn btn-default" @click="handleGetBtnTap">获取指定key本地存储的数据</button>
+			</span>
+		</div>
+
+		<button type="button" class="btn btn-xs btn-primary" @click="handleGetAllBtnTap">获取全部本地存储数据</button>
+		<button type="button" class="btn btn-xs btn-primary" @click="handleClearAllBtnTap">清空所有本地存储的数据</button>
+
+	</div>
+</body>
+<script src=https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js></script>
+<script src="../dist/index.umd.js"></script>
+
+<script>
+	const $cache = new AppCache();
+
+	const data = {
+		key1: '',
+		key2: '',
+		key3: '',
+
+		value1: '',
+		value2:'',
+	}
+
+	const methods = {
+		handleSaveBtnTap() {
+			$cache.save(this.key1, this.value1)
+			console.log('设置成功')
+		},
+		handleClearBtnTap() {
+			console.log(this.key2)
+			const isClear = $cache.clear(this.key2);
+			if (isClear) console.log('删除单个成功')
+			console.log(this.handleGetAllBtnTap())
+		},
+		handleGetBtnTap() {
+			console.log($cache.get(this.key3))
+		},
+		handleClearAllBtnTap() {
+			$cache.clearAll();
+			console.log('删除全部本地存储数据')
+		},
+		handleGetAllBtnTap() {
+			console.log($cache.getAll())
+		}
+	}
+
+	new Vue({
+		el: '#app',
+		data() {
+			return data
+		},
+		methods
+	})
+
+
+</script>
+
+</html>
