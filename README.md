@@ -1,44 +1,100 @@
 # 说明
 
-使用typescript进行编写, 基于rollup打包 . 主要用于工作中 构建库或者插 项目通用模板 .
+轻量且强悍的 Cache库, 为您暴露丰富而统一的 API, 使得业务调用更加简便.  
 
-## 使用
+1. 速度更快: 优先操作读取内存中的变量.
+2. 更方便: 可以直接存储JSON格式数据，无需手动转换成字符串.
+3. 支持设置存储的失效时间.
 
-将这个项目克隆到本地, 推荐使用 [fast-template-cli](https://www.npmjs.com/package/fast-template-cli) 进行创建此模板.  
+## 安装和使用
 
-[修改详细说明](./docs/steps.md)
+NPM方式:
 
-## script 命令
-
-开发, 预览. 访问地址对应 /examples/index.html 页面
-
-* npm run dev  
-
-打包
-
-* npm run build
-
-推送到npm远程
-
-* npm run npmp
-
-## 目录结构
-
-```code
-├── README.md                              // 项目文档说明
-├── package.json                           // 里边相关配置 需要自己手动更改为项目匹配的信息
-├── rollup.config.build.ts                 // rollup打包配置
-├── rollup.config.dev.ts                   // rollup开发运行配置
-├── npmpublish.js                          // npm 发布命令
-├── examples                               // 开发时，运行 npm run dev ，进行代码调试 
-│   └── index.html
-├── tsconfig.json                          // ts 配置文件
-├── test                                   // 测试
-├── docs                                   // 文档
-├── types                                  // 数据模型
-├── dist                                   // 打包编译输出的文件目录
-│   ├── npm-package-template.es.js         // 打包输出的 es 引入文件
-│   └── npm-package-template.umd.js        // 打包输出的 und 格式文件
-└── src                                    // 源码目录
-    └── main.ts                            // 源码入口文件
+```bash
+npm install iweb-cache -S
 ```
+
+```js
+import iwebCache from 'iweb-cache'
+// or
+const iwebCache = require('iweb-cache')
+
+const $cache = iwebCache();
+```
+
+CDN: 方式
+
+```html
+<script src="https://xxx.xxx.xx"></script>
+<script>
+    const $cache = window.iwebCache();
+</script>
+```
+
+### 初始化配置参数
+
+```js
+    // 1.无其他配置
+    const $cache = iwebCache();
+
+    // 2.配置选项
+    const $cache = iwebCache({
+        // 缓存驱动类型，默认为 localStorage
+        type: 'localStorage',
+        // 主要避免通一个域下有两个前端项目，如果不设置前缀可能会冲突
+        prefix: 'abc', // -> abc-iweb-cache 
+        // 所有存储的数据默认过期时间, 单位毫秒
+        // 如果是sessionStorage, 那么是会话期间有效, 只有 type 为 localStorage才可能是永久不会过期
+        expires: 1000 * 5
+    });
+```
+
+### 设置缓存
+
+```js
+    $cache.save('token', '123456')
+
+    $cache.save('userInfo', {
+        name: '张三',
+        age: 88,
+    })
+
+    // 设置 5秒钟失效
+    $cache.save('token', '123456', 1000 * 5)
+```
+
+### 读取缓存数据
+
+```js
+    const token = $cache.get('token')
+
+    // 读取没有的缓存数据
+    const token1 = $cache.get('token1') // -> false
+
+    // 读取多个缓存数据
+    const [token2, userInfo] = $cache.getAll('token', 'userInfo');
+```
+
+### 覆盖 value 的值, 但是不更新过期时间
+
+```js
+    $cache.cover('token', '123123');
+```
+
+### iwebCache options  
+
+属性|说明|类型|默认值
+-----|-----|-----|-----
+type|数据存数的驱动|string|localStorage
+prefix|存放在浏览的缓存前缀|string|-
+expires|存储数据的默认过期时间, 只在type = localStorage 时有效|-
+
+### cache methods
+
+方法名|说明|参数
+-----|-----|-----
+save|设置缓存数据, 或者更新现有数据|(key: string, title: any, [expires:number]):void
+get|获取缓存数据|(key: string):cacheData|boolean
+getAll|获取多条缓存数据|(keyList:key[]):cacheData|boolean []
+del|删除指定key的缓存数据|(key: string):boolean
+clear|删除全部缓存数据|-
