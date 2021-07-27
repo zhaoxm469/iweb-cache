@@ -9,6 +9,7 @@ const defaultOps: IcacheOptions = {
 };
 
 export default function (options: IcacheOptions = defaultOps) {
+    options = Object.assign({}, defaultOps, options);
     const clientStore = new ClientStore(options);
     return new WebCache(clientStore);
 }
