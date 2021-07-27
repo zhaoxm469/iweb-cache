@@ -40,9 +40,9 @@ const $cache = iwebCache();
 // 2.配置选项
 const $cache = iwebCache({
     // 缓存驱动类型，默认为 localStorage
-    type: 'localStorage',
+    storageType: 'localStorage',
     // 主要避免通一个域下有两个前端项目，如果不设置前缀可能会冲突
-    prefix: 'abc', // -> abc-iweb-cache 
+    prefix: 'abc',
     // 所有存储的数据默认过期时间, 单位毫秒
     // 如果是sessionStorage, 那么是会话期间有效, 只有 type 为 localStorage才可能是永久不会过期
     expires: 1000 * 5
