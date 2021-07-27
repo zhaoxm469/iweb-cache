@@ -87,7 +87,7 @@ $cache.cover('token', '123123');
 -----|-----|-----|-----
 type|数据存数的驱动|string|localStorage
 prefix|存放在浏览的缓存前缀|string|-
-expires|存储数据的默认过期时间, 只在type = localStorage 时有效|-
+expires|全局设置-存储数据的默认过期时间|0=不过期
 
 ### cache methods
 
