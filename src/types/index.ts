@@ -41,6 +41,8 @@ export interface IwebCache {
 
 // 本地存数方法代理
 export interface IclientStore {
+    storage: Storage;
+    options: IcacheOptions;
     save(value: IglobalVariableData): void;
     get(key: string): string | null;
     del(key: string): void;
