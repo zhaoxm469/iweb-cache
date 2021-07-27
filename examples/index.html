@@ -78,7 +78,10 @@
 <script src="../dist/index.umd.js"></script>
 
 <script>
-    const $cache = window.iwebCache();
+    const $cache = window.iwebCache({
+		// 设置数据2秒过期， 如果数据自身写入的 expires ，则优先级大于 此配置
+		// expires:2000
+	});
 
 	const log = (text)=> app.logStr += text + '\n';
 
@@ -153,6 +156,21 @@
 	}]
 
 
+	// 根据多个前缀， 设置多个缓存实例
+	const $cache1 = window.iwebCache({
+		prefix:'iweb-cache-01'
+	});
+	const $cache2 = window.iwebCache({
+		prefix:'iweb-cache-02'
+	});
+
+	$cache1.save('844423',555)
+	$cache2.save('5456asd',555)
+
+
+
+
+
 	const app = new Vue({
 		el:'#app',
 		data(){
@@ -162,9 +180,6 @@
 			};
 		},
 	})
-
-
-	// 覆盖
 
 </script>
 
