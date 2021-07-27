@@ -90,10 +90,11 @@ class WebCache implements IwebCache {
         }
     }
 
-    getExpires(t: number = 0): number {
-        if (typeof t !== 'number') throw new Error('expires not number!');
+    getExpires(expires: number = 0): number {
+        if (!expires) expires = this.clientStore.options.expires as number;
+        if (typeof expires !== 'number') throw new Error('expires not number!');
 
-        return t ? +new Date() + t : 0;
+        return expires ? +new Date() + expires : 0;
     }
 
     getCacheSize() {
