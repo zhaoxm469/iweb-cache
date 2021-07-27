@@ -5,7 +5,7 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>npm-ts-template-starter</title>
+	<title>iweb-cache</title>
 
 	<link href=https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css rel=stylesheet>
 	<style>
@@ -16,39 +16,61 @@
 		.input-group {
 			padding: 10px 0;
 		}
+
+		.log-content{
+			border:1px solid #eee;
+		}
+		.log-content header{
+			border-bottom: 1px solid #eee;
+			justify-content: space-between;
+			padding: 10px 20px;
+			display: flex;
+		}
+		.log-content header div:last-child{
+			cursor: pointer;
+		}
+		.log-content pre{
+			padding: 15px 20px;
+		}
 	</style>
 </head>
 
 <body>
 	<div id="app">
-		<h3>本地存储方法二次封装</h3>
 
-		npm run dev ,开发时测试
-
-		<div class="input-group">
-			<input type="text" class="form-control" v-model="key1" placeholder="请输入要存储的数据key">
-			<input type="text" class="form-control" v-model="value1" placeholder="请输入要存储的数据value">
-			<span class="input-group-btn">
-				<button type="button" class="btn btn-default" @click="handleSaveBtnTap">保存</button>
-			</span>
+		<div v-for="(item,index) in inputList" :key="item.name">
+			{{ item.name }}
+			<div class="input-group">
+				<input
+					type="text"
+					class="form-control"
+					v-for="it in item.input"
+					:key="it.placeholder"
+					v-model="it.value"
+					:placeholder="it.placeholder"
+					style="margin-right:10px"
+				>
+				<span class="input-group-btn">
+					<button
+						v-for="it in item.buttons"
+						:key="it.name"
+						type="button"
+						class="btn btn-primary"
+						style="margin-right:10px"
+						@click="it.click(item)"
+					>{{it.name}}</button>
+				</span>
+			</div>
 		</div>
 
-		<div class="input-group">
-			<input type="text" class="form-control" v-model="key2" placeholder="请输入要删除数据的key">
-			<span class="input-group-btn">
-				<button type="button" class="btn btn-default" @click="handleClearBtnTap">删除</button>
-			</span>
+		<hr>
+		<div class="log-content">
+			<header>
+				<div>输出面板</div>
+				<div @click="logStr=''">清空内容</div>
+			</header>
+			<pre >{{ logStr }}</pre>
 		</div>
-
-		<div class="input-group">
-			<input type="text" class="form-control" v-model="key3" placeholder="请输入要读取数据的key">
-			<span class="input-group-btn">
-				<button type="button" class="btn btn-default" @click="handleGetBtnTap">获取指定key本地存储的数据</button>
-			</span>
-		</div>
-
-		<button type="button" class="btn btn-xs btn-primary" @click="handleGetAllBtnTap">获取全部本地存储数据</button>
-		<button type="button" class="btn btn-xs btn-primary" @click="handleClearAllBtnTap">清空所有本地存储的数据</button>
 
 	</div>
 </body>
@@ -56,48 +78,93 @@
 <script src="../dist/index.umd.js"></script>
 
 <script>
-	const $cache = new AppCache();
+    const $cache = window.iwebCache();
 
-	const data = {
-		key1: '',
-		key2: '',
-		key3: '',
+	const log = (text)=> app.logStr += text + '\n';
 
-		value1: '',
-		value2:'',
-	}
+	const inputList = [{
+		name:'设置缓存数据',
+		input:[{
+			placeholder:'请输入key',
+			value:'',
+		},{
+			placeholder:'请输入value',
+			value:'',
+		},{
+			placeholder:'请输入失效时间（单位毫秒），不穿则不失效',
+			value:'',
+		}],
+		buttons:[{
+			name:'保存',
+			click({ input:[key,value,tt] }){
+				$cache.save(key.value,value.value,Number(tt.value));
+				log('操作成功')
+			}
+		},{
+			name:'根据KEY读取缓存',
+			click({ input:[key,value,tt] }){
+				let data = $cache.get(key.value);
+				if(data) {
+					log( `读取数据,key:${key.value},value:${data}` )
+				}else{
+					log( `没有读取到数据,key:${key.value}` )
+				}
+			}
+		}]
+	},{
+		name:'覆盖值，不更新原本的过期时间',
+		input:[{
+			placeholder:'请输入key',
+			value:'',
+		},{
+			placeholder:'请输入value',
+			value:'',
+		}],
+		buttons:[{
+			name:'更新',
+			click({ input:[key,value,tt] }){
+				$cache.cover(key.value,value.value);
+				log('操作成功')
+			}
+		}]
+	},{
+		name:'读取多个缓存数据',
+		input:[{
+			placeholder:'请输入key，多个以逗号分割',
+			value:'name,token',
+		}],
+		buttons:[{
+			name:'查询',
+			click({ input:[{value}] }){
+				let [ name,token ] = $cache.getAll(...value.split(','))
+				log(`获取多条数据,name:${name},token:${token}`)
+			}
+		}]
+	},{
+		name:'其他功能',
+		buttons:[{
+			name:'获取缓存大小',
+			click(){
+				log($cache.getCacheSize())
+				// let [ name,token ] = $cache.getAll(...value.split(','))
+				// log(`获取多条数据,name:${name},token:${token}`)
+			}
+		}]
+	}]
 
-	const methods = {
-		handleSaveBtnTap() {
-			$cache.save(this.key1, this.value1)
-			console.log('设置成功')
-		},
-		handleClearBtnTap() {
-			console.log(this.key2)
-			const isClear = $cache.clear(this.key2);
-			if (isClear) console.log('删除单个成功')
-			console.log(this.handleGetAllBtnTap())
-		},
-		handleGetBtnTap() {
-			console.log($cache.get(this.key3))
-		},
-		handleClearAllBtnTap() {
-			$cache.clearAll();
-			console.log('删除全部本地存储数据')
-		},
-		handleGetAllBtnTap() {
-			console.log($cache.getAll())
-		}
-	}
 
-	new Vue({
-		el: '#app',
-		data() {
-			return data
+	const app = new Vue({
+		el:'#app',
+		data(){
+			return {
+				logStr:'',
+				inputList
+			};
 		},
-		methods
 	})
 
+
+	// 覆盖
 
 </script>
 
