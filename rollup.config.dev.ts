@@ -1,7 +1,6 @@
 import nodeResolve from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
 import livereload from 'rollup-plugin-livereload';
-import babel from '@rollup/plugin-babel';
 import { defineConfig } from 'rollup';
 import dev from 'rollup-plugin-dev';
 import path from 'path';
