@@ -1,6 +1,7 @@
 import nodeResolve from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
 import livereload from 'rollup-plugin-livereload';
+import babel from '@rollup/plugin-babel';
 import { defineConfig } from 'rollup';
 import dev from 'rollup-plugin-dev';
 import path from 'path';
@@ -18,7 +19,7 @@ export default defineConfig({
             file: resolve('./', pkg.main),
             // 暴露外部的全局变量名称
             format: 'umd',
-            name: 'AppCache',
+            name: 'iwebCache',
             sourcemap: true
         },
         {
@@ -36,6 +37,11 @@ export default defineConfig({
             extensions,
             modulesOnly: true
         }),
+        // babel({
+        //     babelHelpers: 'bundled',
+        //     exclude: 'node_modules/**',
+        //     extensions
+        // }),
         dev({
             port: '6666',
             host: 'localhost',
