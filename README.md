@@ -93,7 +93,7 @@ expires|存储数据的默认过期时间, 只在type = localStorage 时有效|-
 
 方法名|说明|参数
 -----|-----|-----
-save|设置缓存数据, 或者更新现有数据|(key: string, title: any, [expires:number]):void
+save|设置缓存数据, 或者更新现有数据|(key: string, value: any, [expires:number]):void
 get|获取缓存数据|(key: string):cacheData|boolean
 getAll|获取多条缓存数据|(keyList:key[]):cacheData|boolean []
 del|删除指定key的缓存数据|(key: string):boolean
