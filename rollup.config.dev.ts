@@ -44,7 +44,7 @@ export default defineConfig({
         dev({
             port: '6666',
             host: 'localhost',
-            spa: './examples/es.html',
+            spa: './examples/index.html',
             force: true
         }),
         livereload()
