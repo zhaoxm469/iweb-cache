@@ -8,8 +8,8 @@ const defaultOps: IcacheOptions = {
     expires: 0
 };
 
-export default function (options: IcacheOptions = defaultOps) {
-    options = Object.assign({}, defaultOps, options);
+export default function (options?: IcacheOptions) {
+    options = Object.assign({}, options, defaultOps);
     const clientStore = new ClientStore(options);
     return new WebCache(clientStore);
 }
