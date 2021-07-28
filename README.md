@@ -5,6 +5,24 @@
 1. 速度更快: 优先操作读取内存中的变量.
 2. 更方便: 可以直接存储JSON格式数据，无需手动转换成字符串.
 3. 支持设置存储的失效时间.
+4. 自动识别存储数据类型，获取时候能准确返回存储数据的类型。
+
+## 存储数据类型
+
+支持:  
+
+1. Number
+2. String
+3. Null
+4. Undefined
+5. Object
+6. Array
+7. RegExp
+8. Boolean
+
+不支持:  
+
+Symbol, BigInt, Function 这三个类型的数据不能进行存储! 因为无法被JSON.string 序列化
 
 ## 安装和使用
 
