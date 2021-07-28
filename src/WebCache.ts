@@ -39,7 +39,7 @@ class WebCache implements IwebCache {
         return true;
     }
 
-    get<T = string | object>(key: string): T | cacheNotValueType {
+    get<T = any>(key: string): T | cacheNotValueType {
         const data = this.appData[key] ? this.appData[key] : false;
 
         const now = +new Date();
