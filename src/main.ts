@@ -2,14 +2,14 @@ import ClientStore from './ClientStore';
 import WebCache from './WebCache';
 import { IcacheOptions } from './types';
 
-const defaultOps: IcacheOptions = {
+const defaultOps: Required<IcacheOptions> = {
     storageType: 'localStorage',
     prefix: 'iweb-cache',
     expires: 0
 };
 
 export default function (options?: IcacheOptions) {
-    options = Object.assign({}, options, defaultOps);
-    const clientStore = new ClientStore(options);
+    Object.assign(defaultOps, options);
+    const clientStore = new ClientStore(defaultOps);
     return new WebCache(clientStore);
 }
