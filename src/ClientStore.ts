@@ -1,9 +1,11 @@
 import { IcacheOptions, IclientStore, IglobalVariableData } from './types';
 
+type cacheOptionsRequireType = Required<IcacheOptions>;
+
 export default class ClientStore implements IclientStore {
     storage: Storage;
-    options: IcacheOptions;
-    constructor(options: IcacheOptions) {
+    options: cacheOptionsRequireType;
+    constructor(options: cacheOptionsRequireType) {
         this.options = options;
         this.storage = window[this.options.storageType];
     }
@@ -22,9 +24,7 @@ export default class ClientStore implements IclientStore {
     getCacheData(): IglobalVariableData {
         const cacheData = this.storage.getItem(this.options.prefix);
         try {
-            return cacheData
-                ? (JSON.parse(cacheData) as IglobalVariableData)
-                : {};
+            return cacheData ? JSON.parse(cacheData) : {};
         } catch (err) {
             console.error(err);
             return {};
