@@ -85,7 +85,7 @@ $cache.cover('token', '123123');
 
 属性|说明|类型|默认值
 -----|-----|-----|-----
-type|数据存数的驱动|string|localStorage
+storageType|数据存数的驱动|string|localStorage
 prefix|存放在浏览的缓存前缀|string|-
 expires|全局设置-存储数据的默认过期时间|0=不过期
 
@@ -94,7 +94,8 @@ expires|全局设置-存储数据的默认过期时间|0=不过期
 方法名|说明|参数
 -----|-----|-----
 save|设置缓存数据, 或者更新现有数据|(key: string, value: any, [expires:number]):void
+cover|覆盖 value 的值, 但是不更新过期时间|(key: string, value: any):void
 get|获取缓存数据|(key: string):cacheData|boolean
-getAll|获取多条缓存数据|(keyList:key[]):cacheData|boolean []
+getAll|获取多条缓存数据|(keyList:key[]): [cacheData|boolean, ...]
 del|删除指定key的缓存数据|(key: string):boolean
 clear|删除全部缓存数据|-
