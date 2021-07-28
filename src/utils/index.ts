@@ -1,3 +1,5 @@
+import { typeStr } from '../types';
+
 /**
  * @description: 判断字符串是否是对象类型
  * @param {string} str
@@ -49,12 +51,23 @@ export function hasStringify(data: any): boolean {
     if (
         data instanceof Function ||
         typeof data === 'symbol' ||
-        typeof data === 'symbol' ||
-        data === undefined ||
-        data === null
+        typeof data === 'bigint'
     ) {
         return false;
     }
 
     return true;
+}
+
+/**
+ * @description: 获取数据类型
+ * @param {any} data
+ * @return { string }
+ */
+export function getDataType(data: any): typeStr {
+    return Object.prototype.toString
+        .call(data)
+        .substring(8)
+        .replace(/]/, '')
+        .toLocaleLowerCase() as typeStr;
 }
