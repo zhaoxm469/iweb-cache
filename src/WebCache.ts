@@ -2,10 +2,11 @@ import {
     IglobalVariableData,
     cacheNotValueType,
     IclientStore,
-    IwebCache
+    IwebCache,
+    getType
 } from './types';
 
-import { hasStringify, isJsonStr } from './utils';
+import { getDataType, hasStringify, isJsonStr } from './utils';
 
 class WebCache implements IwebCache {
     appData: IglobalVariableData = {};
@@ -18,17 +19,31 @@ class WebCache implements IwebCache {
 
     save(key: string, value: any, expires?: number): boolean {
         if (!key || typeof key !== 'string') throw new Error('key not string!');
+        const valueType = getDataType(value);
+
+        if (typeof value === 'string') value = value.trim();
 
         if (!hasStringify(value)) {
             throw new Error(
-                'Check whether the stored value can be serialized by json.stringify'
+                'Check whether the stored value can be serialized by JSON.stringify()'
             );
         }
 
-        value = JSON.stringify(value);
+        if (valueType === 'undefined') value = 'undefined';
+
+        if (
+            valueType === 'object' ||
+            valueType === 'array' ||
+            valueType === 'null' ||
+            valueType === 'boolean' ||
+            valueType === 'number'
+        ) {
+            value = JSON.stringify(value);
+        }
 
         let saveData = {
             value,
+            valueType,
             expires: this.getExpires(expires)
         };
 
@@ -39,7 +54,7 @@ class WebCache implements IwebCache {
         return true;
     }
 
-    get<T = any>(key: string): T | cacheNotValueType {
+    get<T = any>(key: string): getType<T> {
         const data = this.appData[key] ? this.appData[key] : false;
 
         const now = +new Date();
@@ -50,10 +65,15 @@ class WebCache implements IwebCache {
             return false;
         }
 
+        const valueType = data.valueType;
+
+        if (valueType === 'undefined') return undefined;
+
+        if (valueType === 'string' || valueType === 'regexp') return data.value;
+
         try {
-            return isJsonStr(data.value) ? JSON.parse(data.value) : data.value;
+            return JSON.parse(data.value);
         } catch (err) {
-            console.error(err);
             return false;
         }
     }
