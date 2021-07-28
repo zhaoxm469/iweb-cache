@@ -2,6 +2,21 @@ export type storageType = 'localStorage' | 'sessionStorage';
 export type cacheGetKeyValueType = string | object | boolean;
 export type ICacheDataList = cacheGetKeyValueType[];
 export type cacheNotValueType = false;
+export type typeStr =
+    | 'number'
+    | 'null'
+    | 'undefined'
+    | 'boolean'
+    | 'array'
+    | 'string'
+    | 'object'
+    | 'bigint'
+    | 'symbol'
+    | 'function'
+    | 'regexp';
+
+type mergeType<T> = T;
+export type getType<T> = mergeType<T | cacheNotValueType | string | undefined>;
 
 export interface IglobalVariableData {
     [key: string]: ICacheData;
@@ -36,6 +51,10 @@ export interface ICacheData {
      * @params { number } 单位秒
      */
     expires?: number;
+    /**
+     * @description 储存数据的原始类型
+     */
+    valueType: typeStr;
 }
 
 export interface IwebCache {
@@ -51,7 +70,7 @@ export interface IwebCache {
     /**
      * @description 根据指定key获取缓存数据
      */
-    get<T = any>(key: string): T | cacheNotValueType;
+    get<T = any>(key: string): getType<T>;
     /**
      * @description  获取多条缓存数据
      * @example
