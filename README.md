@@ -25,7 +25,7 @@ const $cache = iwebCache();
 CDN方式:
 
 ```html
-<script src="https://xxx.xxx.xx"></script>
+<script src="https://cdn.jsdelivr.net/npm/iweb-cache/dist/index.umd.js"></script>
 <script>
     const $cache = window.iwebCache();
 </script>
@@ -99,3 +99,7 @@ get|获取缓存数据|(key: string):cacheData|boolean
 getAll|获取多条缓存数据|(keyList:key[]): [cacheData|boolean, ...]
 del|删除指定key的缓存数据|(key: string):boolean
 clear|删除全部缓存数据|-
+
+#### 联系我
+
+zhaoxm469@163.com
