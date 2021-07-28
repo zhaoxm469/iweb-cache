@@ -1,6 +1,6 @@
 import {
     IglobalVariableData,
-    ICacheDataList,
+    cacheNotValueType,
     IclientStore,
     IwebCache
 } from './types';
@@ -8,7 +8,7 @@ import {
 import { hasStringify, isJsonStr } from './utils';
 
 class WebCache implements IwebCache {
-    private appData: IglobalVariableData = {};
+    appData: IglobalVariableData = {};
     private clientStore: IclientStore;
 
     constructor(clientStore: IclientStore) {
@@ -39,7 +39,7 @@ class WebCache implements IwebCache {
         return true;
     }
 
-    get(key: string): string | object | boolean {
+    get<T = string | object>(key: string): T | cacheNotValueType {
         const data = this.appData[key] ? this.appData[key] : false;
 
         const now = +new Date();
@@ -49,6 +49,7 @@ class WebCache implements IwebCache {
             this.clientStore.save(this.appData);
             return false;
         }
+
         try {
             return isJsonStr(data.value) ? JSON.parse(data.value) : data.value;
         } catch (err) {
@@ -57,13 +58,15 @@ class WebCache implements IwebCache {
         }
     }
 
-    getAll(...arg: string[]): ICacheDataList {
+    getAll(...arg: string[]): [any] {
         if (!arg.length) new Error('key not .');
-        const newList = arg.reduce((a, b) => {
+
+        const newList = arg.reduce<any>((a, b) => {
             let data = this.get(b);
             a.push(data);
             return a;
-        }, [] as ICacheDataList);
+        }, []);
+
         return newList;
     }
 
