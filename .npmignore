@@ -1,6 +1,7 @@
 src
 docs
 test
+__test__
 examples
 .babelrc
 .editorconfig
