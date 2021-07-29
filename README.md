@@ -2,10 +2,9 @@
 
 轻量且强悍的 Cache库, 为您暴露丰富而统一的 API, 使得业务调用更加简便.  
 
-1. 速度更快: 优先操作读取内存中的变量.
-2. 更方便: 可以直接存储JSON格式数据，无需手动转换成字符串.
-3. 支持设置存储的失效时间.
-4. 自动识别存储数据类型，获取时候能准确返回存储数据的类型。
+1. 优先读取内存中的数据.
+2. 支持八中类型数据的存储
+3. 可自定义存储数据的失效时间
 
 ## 存储数据类型
 
@@ -70,15 +69,16 @@ const $cache = iwebCache({
 ### 设置缓存
 
 ```js
-$cache.save('token', '123456')
-
 $cache.save('userInfo', {
-    name: '张三',
-    age: 88,
+    name: '张三'
 })
 
-// 设置 5秒钟失效
+// 储存数据在5秒钟失效
 $cache.save('token', '123456', 1000 * 5)
+
+setTimeout(() => {
+    const token = $cache.get('token') // -> false
+}, 5010);
 ```
 
 ### 读取缓存数据
@@ -105,16 +105,16 @@ $cache.cover('token', '123123');
 -----|-----|-----|-----
 storageType|数据存数的驱动|string|localStorage
 prefix|存放在浏览的缓存前缀|string|-
-expires|全局设置-存储数据的默认过期时间|0=不过期
+expires|全局设置-存储数据的默认过期时间|number(单位毫秒)|-
 
-### cache methods
+### cache api
 
 方法名|说明|参数
 -----|-----|-----
-save|设置缓存数据, 或者更新现有数据|(key: string, value: any, [expires:number]):void
-cover|覆盖 value 的值, 但是不更新过期时间|(key: string, value: any):void
+save|设置缓存|(key: string, value: any, [expires:number]):boolean
+cover|覆盖 value , 但不更新过期时间|(key: string, value: any):boolean
 get|获取缓存数据|(key: string):cacheData|boolean
-getAll|获取多条缓存数据|(keyList:key[]): [cacheData|boolean, ...]
+getAll|获取多条缓存数据|(...[string]): [value|boolean, ...]
 del|删除指定key的缓存数据|(key: string):boolean
 clear|删除全部缓存数据|-
 
