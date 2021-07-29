@@ -99,18 +99,20 @@ class WebCache implements IwebCache {
         return false;
     }
 
-    clear(): void {
+    clear(): boolean {
         this.appData = {};
         this.clientStore.clear();
+        return true;
     }
 
-    cover(key: string, value: any) {
+    cover(key: string, value: any): boolean {
         let data = this.appData[key];
         if (data && data.expires) {
             this.save(key, value, data.expires - +new Date());
         } else {
             this.save(key, value);
         }
+        return true;
     }
 
     getExpires(expires: number = 0): number {

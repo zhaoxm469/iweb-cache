@@ -66,7 +66,7 @@ export interface IwebCache {
     /**
      * @description  覆盖缓存数据，但不更新过期时间
      */
-    cover(key: string, value: any): void;
+    cover(key: string, value: any): boolean;
     /**
      * @description 根据指定key获取缓存数据
      */
@@ -88,7 +88,7 @@ export interface IwebCache {
     /**
      * @description  清空全部缓存数据
      */
-    clear(): void;
+    clear(): boolean;
 }
 
 // 本地存数方法代理
