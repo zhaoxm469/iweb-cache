@@ -1,6 +1,6 @@
 {
     "name": "iweb-cache",
-    "version": "0.0.5",
+    "version": "0.0.7",
     "description": "轻量且强悍的 Cache库, 为您暴露丰富而统一的 API, 使得业务调用更加简便. ",
     "keywords": [
         "cache",
