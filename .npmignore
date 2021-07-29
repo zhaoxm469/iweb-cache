@@ -18,3 +18,4 @@ tsconfig.json
 .cz-config.js
 vite.config.ts
 coverage
+.*
