@@ -22,7 +22,7 @@
 
 不支持:  
 
-Symbol, BigInt, Function 这三个类型的数据不能进行存储! 因为无法被JSON.string 序列化
+Symbol, BigInt, Function 这三个类型的数据不能进行存储! 
 
 ## 安装和使用
 
